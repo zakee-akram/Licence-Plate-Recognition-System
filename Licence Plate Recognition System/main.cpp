@@ -10,7 +10,7 @@ void info() {
 int main() {
     info();
     //The image that is being checked. 
-    Mat orignal = imread("plate1.jpg");
+    Mat orignal = imread("plates/plate1.jpg");
 #ifdef SHOW_ALL_IMAGES
     imshow("OrignalImage", orignal);
 #endif

@@ -1,12 +1,18 @@
-#include <iostream>
 #include "main.h"
-#include "plate.h"
+#include <iostream>
 
 using namespace cv;
+
+Mat preProcess(Mat orignal);
+std::vector<std::vector<Point>> getContours(Mat image);
+void contourReduction1(std::vector<std::vector<Point>> contours, Mat image);
+void findplate(std::vector<std::vector<Point>> contours, Mat image);
+
 void info() {
     std::cout << "\t\t\t:::::Licence Plate System:::::\n " << "\t This sytem is purely to help me develop my c++ plus skills and learn opencv.\n" <<
         "\t Therefore the commenting is done in a more teaching method to help me.\n";
 }
+
 int main() {
     info();
     //The image that is being checked. 
@@ -19,7 +25,8 @@ int main() {
     //Gets the contours of the image.
     std::vector<std::vector<Point>> contours = getContours(processedImage);
     //Calls contourReduction1 to try and find plate.
-    contourReduction1(contours, orignal);
+    //contourReduction1(contours, orignal);
+    findplate(contours,processedImage);
     waitKey(0);
 }
 
@@ -58,133 +65,6 @@ std::vector<std::vector<Point>> getContours(Mat image) {
     //New image that we will draw the contours onto and display. 
     Mat contourImage(image.size(), CV_8UC3, Scalar(0, 0, 0));
     return contours;
-
-    //
-    //    std::vector<std::vector<Point>> conPoly(contours.size());
-    //    std::vector<Point> biggest;
-    //    int maxArea = 0;
-    //    std::vector<Rect> boundRect(contours.size());
-    //
-    //    for (size_t i = 0; i < contours.size(); i++) {
-    //        cv::drawContours(contourImage, contours, i, white);
-    //
-    //        int area = contourArea(contours[i]);
-    //        std::string objectType;
-    //        if (area > 1000) {
-    //            float peri = arcLength(contours[i], true);
-    //            approxPolyDP(contours[i], conPoly[i], 0.02 * peri, true);
-    //            if (area > maxArea && conPoly[i].size() == 4) {
-    //                drawContours(image, conPoly, i, Scalar(255, 0, 255), 5);
-    //                biggest = { conPoly[i][0],conPoly[i][1] ,conPoly[i][2] ,conPoly[i][3] };
-    //                maxArea = area;
-    //            }
-    //            //drawContours(imgOriginal, 
-    //            //drawContours(image, conPoly, i, Scalar(255, 0, 255), 2);
-    //            rectangle(image, boundRect[i].tl(), boundRect[i].br(), Scalar(0, 255, 0), 5);
-    //        }
-    //
-    //    }
-    //#ifdef SHOW_ALL_IMAGES
-    //    cv::imshow("Contours", contourImage);
-    //#endif
-    //
-    //
-    //
-    //
-    //    std::cout << "Current Amount Of Contours: " << contours.size() << "\n";
-    //    cv::Rect boundingRect;
-    //    std::vector<Point> vectorOfPossibleChars;
-    //    std::vector<Rect> Rect(contours.size());
-    //    std::vector<std::vector<Point> > Newcontours;
-    //
-    //    for (auto& contour : contours) {
-    //        boundingRect = cv::boundingRect(contour);
-    //        double aspect = (float)boundingRect.width / (float)boundingRect.height;
-    //        if (boundingRect.area() > 80 && boundingRect.width > 4
-    //            && boundingRect.height > 8 && 0.15 < aspect && aspect < 2) {
-    //            Newcontours.push_back(contour);
-    //        }
-    //    }
-    //    std::cout << "New Amount Of Contours: " << Newcontours.size() << "\n";
-    //
-    //    Mat newImage;
-    //    newImage = Mat(image.size(), CV_8UC3, black);
-    //    drawContours(newImage, Newcontours, -1, white);
-    //    imshow("ContourReduction", newImage);
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //    std::vector<Point> newPoints;
-    //    std::vector<int>  sumPoints, subPoints;
-    //
-    //    for (int i = 0; i < 4; i++)
-    //    {
-    //        sumPoints.push_back(biggest[i].x + biggest[i].y);
-    //        subPoints.push_back(biggest[i].x - biggest[i].y);
-    //    }
-    //    newPoints.push_back(biggest[min_element(sumPoints.begin(), sumPoints.end()) - sumPoints.begin()]); // 0
-    //    newPoints.push_back(biggest[max_element(subPoints.begin(), subPoints.end()) - subPoints.begin()]); //1
-    //    newPoints.push_back(biggest[min_element(subPoints.begin(), subPoints.end()) - subPoints.begin()]); //2
-    //    newPoints.push_back(biggest[max_element(sumPoints.begin(), sumPoints.end()) - sumPoints.begin()]); //3
-    //    Mat testImage;
-    //    float w = image.size[1];
-    //    float h = image.size[0];
-    //    Point2f src[4] = { newPoints[0],newPoints[1],newPoints[2],newPoints[3] };
-    //    Point2f dst[4] = { {0.0f,0.0f},{w,0.0f},{0.0f,h},{w,h} };
-    //    Mat matrix = getPerspectiveTransform(src, dst);
-    //    warpPerspective(contourImage, testImage, matrix, Point(w, h));
-    //#ifdef SHOW_ALL_IMAGES
-    //    imshow("OtherWayWarped", testImage);
-    //#endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //********************************
-
-
-        //std::vector<std::vector<Point> > Secondcontours;
-        //Mat TestImage2 = preProcess(testImage);
-        //findContours(TestImage2, Secondcontours, RETR_LIST, CHAIN_APPROX_NONE);
-        //std::cout << "Current Amount Of Contours: " << Secondcontours.size() << "\n";
-
-        //cv::Rect boundingRect;
-        //std::vector<Point> vectorOfPossibleChars;
-        //std::vector<Rect> Rect(Secondcontours.size());
-        //std::vector<std::vector<Point> > Newcontours;
-
-        //for (auto& contour : Secondcontours) {
-        //    boundingRect = cv::boundingRect(contour);
-        //    double aspect = (float)boundingRect.width / (float)boundingRect.height;
-        //    if (boundingRect.area() > 80 && boundingRect.width > 2
-        //        && boundingRect.height > 8 && 0.25 < aspect && aspect < 1.0) {
-        //        Newcontours.push_back(contour);
-        //    }
-        //}
-        //std::cout << "New Amount Of Contours: " << Newcontours.size() << "\n";
-
-        //Mat newImage;
-        //newImage = Mat(image.size(), CV_8UC3, black);
-        //drawContours(newImage, Newcontours, -1, white);
-        //imshow("Test2", newImage);
-
 }
 
 void contourReduction1(std::vector<std::vector<Point>> contours, Mat image) {
@@ -216,4 +96,52 @@ void contourReduction1(std::vector<std::vector<Point>> contours, Mat image) {
     imshow("ContourReduction", newImage);
 #endif
 }
+
+void findplate(std::vector<std::vector<Point>> contours, Mat image) {
+    std::vector<std::vector<Point>> conPoly(contours.size());
+    std::vector<Point> biggest;
+    int maxArea = 0;
+    std::vector<Rect> boundRect(contours.size());
+    for (size_t i = 0; i < contours.size(); i++) {
+        cv::drawContours(image, contours, i, Scalar(255.0, 255.0, 255.0));
+
+        int area = contourArea(contours[i]);
+        std::string objectType;
+        if (area > 1000) {
+            float peri = arcLength(contours[i], true);
+            approxPolyDP(contours[i], conPoly[i], 0.02 * peri, true);
+            if (area > maxArea && conPoly[i].size() == 4) {
+                drawContours(image, conPoly, i, Scalar(255, 0, 255), 5);
+                biggest = { conPoly[i][0],conPoly[i][1] ,conPoly[i][2] ,conPoly[i][3] };
+                maxArea = area;
+            }
+            rectangle(image, boundRect[i].tl(), boundRect[i].br(), Scalar(0, 255, 0), 5);
+        }
+
+    }
+        std::vector<Point> newPoints;
+     std::vector<int>  sumPoints, subPoints;
+ 
+     for (int i = 0; i < 4; i++)
+     {
+         sumPoints.push_back(biggest[i].x + biggest[i].y);
+         subPoints.push_back(biggest[i].x - biggest[i].y);
+     }
+
+     newPoints.push_back(biggest[min_element(sumPoints.begin(), sumPoints.end()) - sumPoints.begin()]); // 0
+     newPoints.push_back(biggest[max_element(subPoints.begin(), subPoints.end()) - subPoints.begin()]); //1
+     newPoints.push_back(biggest[min_element(subPoints.begin(), subPoints.end()) - subPoints.begin()]); //2
+     newPoints.push_back(biggest[max_element(sumPoints.begin(), sumPoints.end()) - sumPoints.begin()]); //3
+     Mat testImage;
+     float w = image.size[1];
+     float h = image.size[0];
+     Point2f src[4] = { newPoints[0],newPoints[1],newPoints[2],newPoints[3] };
+     Point2f dst[4] = { {0.0f,0.0f},{w,0.0f},{0.0f,h},{w,h} };
+     Mat matrix = getPerspectiveTransform(src, dst);
+     warpPerspective(image, testImage, matrix, Point(w, h));
+ #ifdef SHOW_ALL_IMAGES
+     imshow("OtherWayWarped", testImage);
+ #endif
+}
+
 
